@@ -31,9 +31,38 @@
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar">
     <a href="#" class="logo">biruk<span class="logo-dot">.</span></a>
-    <div class="menu-icon" id="menu-icon">
-      <i class="fas fa-bars"></i>
+
+    <div class="nav-controls-mobile">
+      <button class="nav-icon-btn search-trigger-btn" id="mobileSearchBtn" title="Search (Ctrl + K)"
+        aria-label="Search">
+        <i class="fas fa-search"></i>
+      </button>
+      <button class="nav-icon-btn theme-toggle-btn" id="mobileThemeToggle" title="Toggle Light/Dark Theme"
+        aria-label="Toggle Theme">
+        <!-- Sun Icon (shown in Dark mode) -->
+        <svg class="sun-icon-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+          stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4.2"></circle>
+          <line x1="12" y1="2" x2="12" y2="4.5"></line>
+          <line x1="12" y1="19.5" x2="12" y2="22"></line>
+          <line x1="4.93" y1="4.93" x2="6.7" y2="6.7"></line>
+          <line x1="17.3" y1="17.3" x2="19.07" y2="19.07"></line>
+          <line x1="2" y1="12" x2="4.5" y2="12"></line>
+          <line x1="19.5" y1="12" x2="22" y2="12"></line>
+          <line x1="4.93" y1="19.07" x2="6.7" y2="17.3"></line>
+          <line x1="17.3" y1="6.7" x2="19.07" y2="4.93"></line>
+        </svg>
+        <!-- Crescent Moon Icon (shown in Light mode) matching user reference -->
+        <svg class="moon-icon-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+          stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      <div class="menu-icon" id="menu-icon">
+        <i class="fas fa-bars"></i>
+      </div>
     </div>
+
     <ul>
       <li class="active"><a href="#home">Home</a></li>
       <li><a href="#about">About</a></li>
@@ -43,11 +72,47 @@
       <li><a href="#services">Services</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <a href="Biruk_Simon_Resume.pdf" class="nav-hire-btn" id="resumeBtn" download="Biruk_Simon_Resume.pdf"
-      target="_blank">
-      <i class="fas fa-download"></i> Resume
-    </a>
+
+    <div class="nav-actions">
+      <!-- Search Button with shortcut badge -->
+      <button class="nav-icon-btn search-trigger-btn" id="navSearchBtn" title="Search site (Ctrl+K)"
+        aria-label="Search site">
+        <i class="fas fa-search"></i>
+        <span class="search-kbd-hint"><kbd>Ctrl</kbd><kbd>K</kbd></span>
+      </button>
+
+      <!-- Theme Mode Toggle matching user reference icon -->
+      <button class="nav-icon-btn theme-toggle-btn" id="themeToggleBtn" title="Toggle Theme (Dark / Light)"
+        aria-label="Toggle Theme">
+        <!-- Sun Icon (shown in Dark mode) -->
+        <svg class="sun-icon-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+          stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4.2"></circle>
+          <line x1="12" y1="2" x2="12" y2="4.5"></line>
+          <line x1="12" y1="19.5" x2="12" y2="22"></line>
+          <line x1="4.93" y1="4.93" x2="6.7" y2="6.7"></line>
+          <line x1="17.3" y1="17.3" x2="19.07" y2="19.07"></line>
+          <line x1="2" y1="12" x2="4.5" y2="12"></line>
+          <line x1="19.5" y1="12" x2="22" y2="12"></line>
+          <line x1="4.93" y1="19.07" x2="6.7" y2="17.3"></line>
+          <line x1="17.3" y1="6.7" x2="19.07" y2="4.93"></line>
+        </svg>
+        <!-- Crescent Moon Icon (shown in Light mode) matching user reference -->
+        <svg class="moon-icon-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+          stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+
+      <a href="Biruk_Simon_Resume.pdf" class="nav-hire-btn" id="resumeBtn" download="Biruk_Simon_Resume.pdf"
+        target="_blank">
+        <i class="fas fa-download"></i> Resume
+      </a>
+    </div>
   </nav>
+
+  <!-- Reading Progress Bar -->
+  <div class="scroll-progress-bar" id="scrollProgressBar"></div>
 
   <!-- ===== HERO SECTION ===== -->
   <section class="home" id="home">
@@ -113,6 +178,37 @@
       <span>Scroll Down</span>
     </div>
   </section>
+
+  <!-- ===== TECH TICKER / INFINITE LOGO MARQUEE ===== -->
+  <div class="tech-marquee-wrapper" aria-hidden="true">
+    <div class="tech-marquee-track">
+      <span class="marquee-item"><i class="fab fa-react" style="color:#61dafb"></i> React.js</span>
+      <span class="marquee-item"><i class="fas fa-bolt" style="color:#ffffff"></i> Next.js 14</span>
+      <span class="marquee-item"><i class="fas fa-server" style="color:#e0234e"></i> NestJS</span>
+      <span class="marquee-item"><i class="fab fa-node-js" style="color:#339933"></i> Node.js</span>
+      <span class="marquee-item"><i class="fab fa-python" style="color:#3776ab"></i> FastAPI & Python</span>
+      <span class="marquee-item"><i class="fas fa-code" style="color:#3178c6"></i> TypeScript</span>
+      <span class="marquee-item"><i class="fas fa-database" style="color:#00758f"></i> MySQL</span>
+      <span class="marquee-item"><i class="fas fa-leaf" style="color:#47a248"></i> MongoDB</span>
+      <span class="marquee-item"><i class="fab fa-docker" style="color:#2496ed"></i> Docker</span>
+      <span class="marquee-item"><i class="fas fa-network-wired" style="color:#8b5cf6"></i> REST & GraphQL</span>
+      <span class="marquee-item"><i class="fab fa-git-alt" style="color:#f05032"></i> Git Architecture</span>
+      <span class="marquee-item"><i class="fas fa-shield-alt" style="color:#22c55e"></i> Web Security</span>
+      <!-- Loop duplicate for continuous flow -->
+      <span class="marquee-item"><i class="fab fa-react" style="color:#61dafb"></i> React.js</span>
+      <span class="marquee-item"><i class="fas fa-bolt" style="color:#ffffff"></i> Next.js 14</span>
+      <span class="marquee-item"><i class="fas fa-server" style="color:#e0234e"></i> NestJS</span>
+      <span class="marquee-item"><i class="fab fa-node-js" style="color:#339933"></i> Node.js</span>
+      <span class="marquee-item"><i class="fab fa-python" style="color:#3776ab"></i> FastAPI & Python</span>
+      <span class="marquee-item"><i class="fas fa-code" style="color:#3178c6"></i> TypeScript</span>
+      <span class="marquee-item"><i class="fas fa-database" style="color:#00758f"></i> MySQL</span>
+      <span class="marquee-item"><i class="fas fa-leaf" style="color:#47a248"></i> MongoDB</span>
+      <span class="marquee-item"><i class="fab fa-docker" style="color:#2496ed"></i> Docker</span>
+      <span class="marquee-item"><i class="fas fa-network-wired" style="color:#8b5cf6"></i> REST & GraphQL</span>
+      <span class="marquee-item"><i class="fab fa-git-alt" style="color:#f05032"></i> Git Architecture</span>
+      <span class="marquee-item"><i class="fas fa-shield-alt" style="color:#22c55e"></i> Web Security</span>
+    </div>
+  </div>
 
   <!-- ===== ABOUT SECTION ===== -->
   <section id="about">
@@ -547,11 +643,11 @@
           <div class="project-tech">
             <span>NestJS</span><span>TypeScript</span><span>JWT</span><span>MySQL</span>
           </div>
-          <!-- <div class="project-links">
+          <div class="project-links">
             <a href="https://github.com/birukman493-star" class="btn" target="_blank" rel="noopener noreferrer">
               <i class="fab fa-github"></i> GitHub
             </a>
-          </div> -->
+          </div>
         </div>
       </div>
 
@@ -568,15 +664,15 @@
             fully responsive layout.</p>
           <div class="project-tech">
             <span>React</span><span>Tailwind CSS</span><span>Chart.js</span>
-            <!-- </div>
+          </div>
           <div class="project-links">
             <a href="https://github.com/birukman493-star" class="btn" target="_blank" rel="noopener noreferrer">
               <i class="fab fa-github"></i> GitHub
             </a>
-          </div> -->
           </div>
         </div>
       </div>
+    </div>
   </section>
 
   <!-- ===== SERVICES SECTION ===== -->
@@ -710,6 +806,10 @@
   <span class="prop">available</span>: <span class="bool">true</span>,
   <span class="prop">hire</span>: () =&gt; <span class="str">"Let's build!"</span>
 };</code></pre>
+            <button class="code-copy-btn" id="copyCodeSnippetBtn" title="Copy code" aria-label="Copy snippet">
+              <i class="fas fa-copy"></i>
+              <span class="copy-tooltip">Copied!</span>
+            </button>
           </div>
         </div>
       </div>
@@ -731,9 +831,13 @@
             opportunities. Let's create something amazing together.
           </p>
           <div class="contact-details">
-            <div class="detail-item">
+            <div class="detail-item email-copy-row">
               <i class="fas fa-envelope"></i>
-              <a href="mailto:birukman493@gmail.com">birukman493@gmail.com</a>
+              <a href="mailto:birukman493@gmail.com" id="contactEmailLink">birukman493@gmail.com</a>
+              <button type="button" class="quick-copy-pill" id="copyEmailBtn" title="Copy email address">
+                <i class="fas fa-copy"></i>
+                <span class="copy-text">Copy</span>
+              </button>
             </div>
             <div class="detail-item">
               <i class="fas fa-phone"></i>
@@ -752,7 +856,8 @@
             <a href="https://github.com/birukman493-star" target="_blank" class="social-pill" title="GitHub">
               <i class="fab fa-github"></i>
             </a>
-            <a href="#" class="social-pill" title="LinkedIn">
+            <a href="https://linkedin.com/in/biruk-simon-7933b0447" target="_blank" class="social-pill"
+              title="LinkedIn">
               <i class="fab fa-linkedin"></i>
             </a>
             <a href="https://wa.me/251954497337" target="_blank" class="social-pill" title="WhatsApp">
@@ -799,7 +904,8 @@
         <p>Building the digital future with passion, precision, and clean code.</p>
         <div class="footer-socials">
           <a href="https://github.com/birukman493-star" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-          <a href="https://linkedin.com/in/biruk-simon-7933b0447" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="https://linkedin.com/in/biruk-simon-7933b0447" target="_blank" title="LinkedIn"><i
+              class="fab fa-linkedin"></i></a>
           <a href="https://t.me/jebiruk1" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
           <a href="https://wa.me/251954497337" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
         </div>
@@ -849,6 +955,44 @@
       </div>
     </div>
   </footer>
+
+  <!-- ===== SEARCH MODAL (SPOTLIGHT COMMAND PALETTE) ===== -->
+  <div class="search-modal-backdrop" id="searchModalBackdrop">
+    <div class="search-modal-container" role="dialog" aria-modal="true" aria-label="Quick Search">
+      <div class="search-modal-header">
+        <i class="fas fa-search search-input-icon"></i>
+        <input type="text" id="siteSearchInput" placeholder="Search projects, skills, services, experience..."
+          autocomplete="off" spellcheck="false" />
+        <button class="search-modal-close" id="searchModalClose" title="Close (Esc)" aria-label="Close search">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="search-modal-quick-tags">
+        <span class="quick-tag" data-query="React">React</span>
+        <span class="quick-tag" data-query="NestJS">NestJS</span>
+        <span class="quick-tag" data-query="Full Stack">Full Stack</span>
+        <span class="quick-tag" data-query="Python">Python</span>
+        <span class="quick-tag" data-query="Security">Security</span>
+        <span class="quick-tag" data-query="E-Commerce">E-Commerce</span>
+      </div>
+
+      <div class="search-modal-results" id="searchResultsContainer">
+        <!-- Live search matches injected via JS -->
+      </div>
+
+      <div class="search-modal-footer">
+        <span><kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
+        <span><kbd>Enter</kbd> to select</span>
+        <span><kbd>Esc</kbd> to close</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back To Top Button -->
+  <button class="back-to-top-btn" id="backToTopBtn" title="Back to top" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
 
   <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
   <script src="script.js"></script>

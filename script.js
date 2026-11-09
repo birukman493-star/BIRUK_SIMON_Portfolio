@@ -335,4 +335,291 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   counters.forEach(c => counterObserver.observe(c));
+
+  // ============================================================
+  // THEME TOGGLE (DARK / LIGHT MODE)
+  // ============================================================
+  const themeToggleBtn = document.getElementById("themeToggleBtn");
+  const mobileThemeToggle = document.getElementById("mobileThemeToggle");
+
+  const applyTheme = (theme) => {
+    if (theme === "light") {
+      document.body.classList.add("light-theme");
+      document.body.classList.remove("dark-theme");
+    } else {
+      document.body.classList.remove("light-theme");
+      document.body.classList.add("dark-theme");
+    }
+    localStorage.setItem("portfolio_theme", theme);
+  };
+
+  const savedTheme = localStorage.getItem("portfolio_theme") || "dark";
+  applyTheme(savedTheme);
+
+  const toggleTheme = () => {
+    const isLight = document.body.classList.contains("light-theme");
+    applyTheme(isLight ? "dark" : "light");
+  };
+
+  if (themeToggleBtn) themeToggleBtn.addEventListener("click", toggleTheme);
+  if (mobileThemeToggle) mobileThemeToggle.addEventListener("click", toggleTheme);
+
+  // ============================================================
+  // READING SCROLL PROGRESS BAR & BACK TO TOP BUTTON
+  // ============================================================
+  const scrollProgressBar = document.getElementById("scrollProgressBar");
+  const backToTopBtn = document.getElementById("backToTopBtn");
+
+  window.addEventListener("scroll", () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+
+    if (scrollProgressBar) {
+      scrollProgressBar.style.width = `${progress}%`;
+    }
+
+    if (backToTopBtn) {
+      if (scrollTop > 400) {
+        backToTopBtn.classList.add("show");
+      } else {
+        backToTopBtn.classList.remove("show");
+      }
+    }
+  });
+
+  if (backToTopBtn) {
+    backToTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  // ============================================================
+  // SPOTLIGHT SITE SEARCH (MODAL & CMD+K)
+  // ============================================================
+  const searchModalBackdrop = document.getElementById("searchModalBackdrop");
+  const navSearchBtn = document.getElementById("navSearchBtn");
+  const mobileSearchBtn = document.getElementById("mobileSearchBtn");
+  const searchModalClose = document.getElementById("searchModalClose");
+  const siteSearchInput = document.getElementById("siteSearchInput");
+  const searchResultsContainer = document.getElementById("searchResultsContainer");
+  const quickTags = document.querySelectorAll(".quick-tag");
+
+  // Search items database compiled from the portfolio content
+  const searchableIndex = [
+    { title: "Apple-Inspired E-Commerce", cat: "Project", desc: "Full-stack e-commerce with React, Node.js, Express, MySQL & admin dashboard.", link: "#projects", icon: "fa-shopping-bag" },
+    { title: "AI Web Security Analyzer", cat: "Project", desc: "FastAPI & React AI vulnerability scanner for code, URLs, and SSL certificates.", link: "#projects", icon: "fa-shield-alt" },
+    { title: "Student Registration System", cat: "Project", desc: "Full-stack school management system with Node.js, Express & MySQL.", link: "#projects", icon: "fa-graduation-cap" },
+    { title: "Portfolio Website", cat: "Project", desc: "Responsive personal portfolio with glassmorphism, animations & smooth scroll.", link: "#projects", icon: "fa-laptop-code" },
+    { title: "React.js & Next.js", cat: "Skill", desc: "Modern frontend frameworks, component architecture, hooks & SSR.", link: "#skills", icon: "fa-react" },
+    { title: "NestJS & Node.js", cat: "Skill", desc: "Enterprise scalable backend architecture, TypeScript, REST APIs.", link: "#skills", icon: "fa-server" },
+    { title: "FastAPI & Python", cat: "Skill", desc: "High-performance Python backend APIs for AI and security services.", link: "#skills", icon: "fa-python" },
+    { title: "MySQL & MongoDB", cat: "Skill", desc: "Relational and document database design, querying, and optimization.", link: "#skills", icon: "fa-database" },
+    { title: "Full Stack Development", cat: "Service", desc: "End-to-end web apps with React + NestJS / Node.js & clean architecture.", link: "#services", icon: "fa-layer-group" },
+    { title: "Web & UI/UX Design", cat: "Service", desc: "Responsive, high-converting Figma prototypes and intuitive interfaces.", link: "#services", icon: "fa-palette" },
+    { title: "Code Review & Debugging", cat: "Service", desc: "Performance audits, security reviews, and refactoring clean code.", link: "#services", icon: "fa-bug" },
+    { title: "Jimma University", cat: "Experience", desc: "4th-year Software Engineering student, Jimma, Ethiopia.", link: "#experience", icon: "fa-university" },
+    { title: "Freelance Developer", cat: "Experience", desc: "Independent and Upwork full-stack web application development.", link: "#experience", icon: "fa-briefcase" },
+    { title: "Download Resume", cat: "Action", desc: "Download Biruk Simon's latest updated PDF resume.", link: "Biruk_Simon_Resume.pdf", icon: "fa-download" },
+    { title: "Contact / Hire Me", cat: "Contact", desc: "Get in touch for freelance projects and full-time opportunities.", link: "#contact", icon: "fa-envelope" }
+  ];
+
+  let activeResultIndex = -1;
+
+  const openSearchModal = () => {
+    if (!searchModalBackdrop) return;
+    searchModalBackdrop.classList.add("active");
+    setTimeout(() => siteSearchInput && siteSearchInput.focus(), 100);
+    renderSearchResults(siteSearchInput ? siteSearchInput.value : "");
+  };
+
+  const closeSearchModal = () => {
+    if (!searchModalBackdrop) return;
+    searchModalBackdrop.classList.remove("active");
+    if (siteSearchInput) siteSearchInput.value = "";
+    activeResultIndex = -1;
+  };
+
+  const renderSearchResults = (query = "") => {
+    if (!searchResultsContainer) return;
+    const cleanQuery = query.trim().toLowerCase();
+    
+    let matches = searchableIndex;
+    if (cleanQuery.length > 0) {
+      matches = searchableIndex.filter(item => 
+        item.title.toLowerCase().includes(cleanQuery) ||
+        item.desc.toLowerCase().includes(cleanQuery) ||
+        item.cat.toLowerCase().includes(cleanQuery)
+      );
+    }
+
+    if (matches.length === 0) {
+      searchResultsContainer.innerHTML = `
+        <div class="search-empty-state">
+          <i class="fas fa-search-minus"></i>
+          <p>No results found for "${query}"</p>
+          <span style="font-size:0.8rem; color:var(--text-muted)">Try searching "React", "NestJS", "Projects", or "Resume"</span>
+        </div>
+      `;
+      return;
+    }
+
+    searchResultsContainer.innerHTML = matches.map((item, idx) => `
+      <a href="${item.link}" class="search-result-item ${idx === 0 ? 'selected' : ''}" data-index="${idx}">
+        <div class="search-result-icon"><i class="fas ${item.icon}"></i></div>
+        <div class="search-result-info">
+          <div class="search-result-title">
+            <span>${item.title}</span>
+            <span class="search-result-category">${item.cat}</span>
+          </div>
+          <div class="search-result-desc">${item.desc}</div>
+        </div>
+        <i class="fas fa-chevron-right" style="font-size:0.75rem; color:var(--text-muted)"></i>
+      </a>
+    `).join("");
+
+    activeResultIndex = 0;
+
+    // Attach click events to close modal upon selection
+    searchResultsContainer.querySelectorAll(".search-result-item").forEach(item => {
+      item.addEventListener("click", () => {
+        closeSearchModal();
+      });
+    });
+  };
+
+  if (navSearchBtn) navSearchBtn.addEventListener("click", openSearchModal);
+  if (mobileSearchBtn) mobileSearchBtn.addEventListener("click", openSearchModal);
+  if (searchModalClose) searchModalClose.addEventListener("click", closeSearchModal);
+
+  if (searchModalBackdrop) {
+    searchModalBackdrop.addEventListener("click", (e) => {
+      if (e.target === searchModalBackdrop) closeSearchModal();
+    });
+  }
+
+  // Quick Tags
+  quickTags.forEach(tag => {
+    tag.addEventListener("click", () => {
+      const q = tag.dataset.query || tag.textContent;
+      if (siteSearchInput) {
+        siteSearchInput.value = q;
+        siteSearchInput.focus();
+        renderSearchResults(q);
+      }
+    });
+  });
+
+  // Search input typing
+  if (siteSearchInput) {
+    siteSearchInput.addEventListener("input", (e) => {
+      renderSearchResults(e.target.value);
+    });
+
+    siteSearchInput.addEventListener("keydown", (e) => {
+      const items = searchResultsContainer ? searchResultsContainer.querySelectorAll(".search-result-item") : [];
+      if (!items.length) return;
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        items[activeResultIndex]?.classList.remove("selected");
+        activeResultIndex = (activeResultIndex + 1) % items.length;
+        items[activeResultIndex]?.classList.add("selected");
+        items[activeResultIndex]?.scrollIntoView({ block: "nearest" });
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        items[activeResultIndex]?.classList.remove("selected");
+        activeResultIndex = (activeResultIndex - 1 + items.length) % items.length;
+        items[activeResultIndex]?.classList.add("selected");
+        items[activeResultIndex]?.scrollIntoView({ block: "nearest" });
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        if (items[activeResultIndex]) {
+          items[activeResultIndex].click();
+        }
+      }
+    });
+  }
+
+  // Keyboard shortcut: Ctrl + K / Cmd + K to open search, Esc to close
+  document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault();
+      if (searchModalBackdrop && searchModalBackdrop.classList.contains("active")) {
+        closeSearchModal();
+      } else {
+        openSearchModal();
+      }
+    } else if (e.key === "Escape") {
+      if (searchModalBackdrop && searchModalBackdrop.classList.contains("active")) {
+        closeSearchModal();
+      }
+    }
+  });
+
+  // ============================================================
+  // INTERACTIVE COPY BUTTONS (Snippet & Contact Email)
+  // ============================================================
+  const copyCodeSnippetBtn = document.getElementById("copyCodeSnippetBtn");
+  if (copyCodeSnippetBtn) {
+    copyCodeSnippetBtn.addEventListener("click", () => {
+      const codeSnippet = `const developer = {
+  name: "Biruk Simon",
+  role: "Full Stack Dev",
+  skills: ["React", "NestJS", "Node.js", "TypeScript"],
+  available: true,
+  hire: () => "Let's build!"
+};`;
+      navigator.clipboard.writeText(codeSnippet).then(() => {
+        copyCodeSnippetBtn.classList.add("copied");
+        setTimeout(() => copyCodeSnippetBtn.classList.remove("copied"), 2200);
+      });
+    });
+  }
+
+  const copyEmailBtn = document.getElementById("copyEmailBtn");
+  if (copyEmailBtn) {
+    copyEmailBtn.addEventListener("click", () => {
+      const email = "birukman493@gmail.com";
+      navigator.clipboard.writeText(email).then(() => {
+        const textSpan = copyEmailBtn.querySelector(".copy-text");
+        const icon = copyEmailBtn.querySelector("i");
+        copyEmailBtn.classList.add("copied");
+        if (textSpan) textSpan.textContent = "Copied!";
+        if (icon) icon.className = "fas fa-check";
+
+        setTimeout(() => {
+          copyEmailBtn.classList.remove("copied");
+          if (textSpan) textSpan.textContent = "Copy";
+          if (icon) icon.className = "fas fa-copy";
+        }, 2200);
+      });
+    });
+  }
+
+  // ============================================================
+  // 3D PERSPECTIVE TILT ON PROJECT & SERVICE CARDS (DESKTOP)
+  // ============================================================
+  if (window.matchMedia("(min-width: 992px)").matches) {
+    const tiltElements = document.querySelectorAll(".project-card, .service-box");
+
+    tiltElements.forEach(card => {
+      card.addEventListener("mousemove", (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -6; // max 6 deg
+        const rotateY = ((x - centerX) / centerX) * 6;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-8px)`;
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)";
+      });
+    });
+  }
 });
